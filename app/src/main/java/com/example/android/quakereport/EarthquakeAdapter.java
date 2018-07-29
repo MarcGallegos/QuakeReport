@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import android.graphics.drawable.GradientDrawable;
 
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
@@ -55,15 +56,25 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
             primaryLocation=originalLocation;
         }
 
+        //Set proper BG color on Magnitude Circle
+        //Fetch BG color from the TextView, a GradientDrawable
+        GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
+
+        //Get the appropriate BG color based on the current event magnitude
+        int magnitudeColor = getMagnitudeColor(currentEarthquake.getMagnitude());
+
+        //Set BG color on Magnitude Circle
+        magnitudeCircle.setColor(magnitudeColor);
+
+        //Locate primary_location XML TextView from list segment by R.id
         TextView primaryLocationView = (TextView) listEventView.findViewById(R.id.primary_location);
+        //Get View from Adapter and set view with earthquake data
         primaryLocationView.setText(primaryLocation);
 
+        //Locate location_offset XML TextView from list segment by R.id
         TextView locationOffsetView = (TextView) listEventView.findViewById(R.id.location_offset);
+        //Get View from Adapter and set view with earthquake data
         locationOffsetView.setText(locationOffset);
-//        //Locate Location XML TextView from list segment by R.id
-//        TextView locationView = (TextView) listEventView.findViewById(R.id.location);
-//        //Get View from Adapter and set view with earthquake data
-//        locationView.setText(currentEarthquake.getLocation());
 
         //Create new date object from time in milliseconds for this earthquake
         Date dateObject = new Date(currentEarthquake.getTimeInMilliseconds());
