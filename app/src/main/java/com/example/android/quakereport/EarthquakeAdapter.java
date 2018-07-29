@@ -87,7 +87,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         //Format magnitude to show 1 decimal place
         String formattedMagnitude = formatMagnitude(currentEarthquake.getMagnitude());
         //Get View from Adapter and set view with earthquake data
-        magnitudeView.setText(formattedMagnitude());
+        magnitudeView.setText(formattedMagnitude);
 
 
         //Return tri-element TextView list layout for display in ListView R.id.list_segment
