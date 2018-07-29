@@ -5,21 +5,23 @@ public class Earthquake {
     //Location Details to display to list segment
     private String mLocation;
     //Magnitude Details to display to list segment
-    private String mMagnitude;
+    private double mMagnitude;
     //Date of Event to display to list segment
     private String mDate;
+    //Time of event to display to list segment
+    private long mTimeInMilliseconds;
 
     /**
      * Create new Earthquake List Object
      *
      * @param location  is the event location for this list segment
-     * @param date      is the date of event for this list segment
+     * @param timeInMilliseconds is the date of event for this list segment
      * @param magnitude is the event magnitude for this list segment
      */
-    public Earthquake(String magnitude, String location, String date) {
+    public Earthquake(double magnitude, String location, Long timeInMilliseconds) {
         mMagnitude = magnitude;
         mLocation = location;
-        mDate = date;
+        mTimeInMilliseconds = timeInMilliseconds;
     }
 
     /**
@@ -31,24 +33,16 @@ public class Earthquake {
     /**
      * Get and Return Magnitude data from Earthquake Object
      */
-    public String getMagnitude() {
+    public double getMagnitude() {
         return mMagnitude;
     }
     /**
-     * Get and Return Event Date data from Earthquake Object
+     * get and return Event Time from Earthquake JSON Object
      */
-    public String getDate() {
-        return mDate;
+    public Long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "Earthquake{" +
-//                ", mMagnitude='" + mMagnitude + '\'' +
-//                ", mLocation='" + mLocation + '\'' +
-//                ", mDate='" + mDate + '\'' +
-//                '}';
-//    }
 
 }

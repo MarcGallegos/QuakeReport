@@ -14,11 +14,18 @@
         tools:text="8.9"/>
 
     <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/location_offset"
+        tools:text="89 km WNW"/>
+
+    <TextView
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/location"
-        tools:text="San Diego"/>
+        android:id="@+id/primary_location"
+        tools:text="San Diego, CA"/>
 
     <TextView
         android:layout_weight="1"
@@ -26,5 +33,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/date"
         tools:text="April 4, 2011"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/time"
+        tools:text="3:00 PM"/>
 
 </LinearLayout>
