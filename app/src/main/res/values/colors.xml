@@ -22,4 +22,40 @@
 
     <!-- Accent color of the app -->
     <color name="colorAccent">#10CAC9</color>
+
+    <!--Circle Color for event magnitude between 0 and 2-->
+    <color name="mag1">#4A78A7</color>
+
+    <!--Circle Color for event magnitude between 2 and 3-->
+    <color name="mag2">#04B4B3</color>
+
+    <!--Circle Color for event magnitude between 3 and 4-->
+    <color name="mag3">#10CAC9</color>
+
+    <!--Circle Color for event magnitude between 4 and 5-->
+    <color name="mag4">#F5A623</color>
+
+    <!--Circle Color for event magnitude between 5 and 6-->
+    <color name="mag5">#FF7D50</color>
+
+    <!--Circle Color for event magnitude between 6 and 7-->
+    <color name="mag6">#FC6644</color>
+
+    <!--Circle Color for event magnitude between 7 and 8-->
+    <color name="mag7">#E75F40</color>
+
+    <!--Circle Color for event magnitude between 8 and 9-->
+    <color name="mag8">#E13A20</color>
+
+    <!--Circle Color for event magnitude between 9 and 10-->
+    <color name="mag9">#D93218</color>
+
+    <!--Circle Color for event magnitude above 10-->
+    <color name="mag10plus">#C03823</color>
+
+    <!--Text color for details of event in the list segment-->
+    <color name="textColorEarthquakeDetails">#B4BAC0</color>
+
+    <!--Text color for primary location of event in the list segment-->
+    <color name="textColorEarthquakeLocation">#2B3D4D</color>
 </resources>
