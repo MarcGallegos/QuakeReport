@@ -10,6 +10,8 @@ public class Earthquake {
     private String mDate;
     //Time of event to display to list segment
     private long mTimeInMilliseconds;
+    //url of USGS page pertaining to event
+    private String mUrl;
 
     /**
      * Create new Earthquake List Object
@@ -17,11 +19,13 @@ public class Earthquake {
      * @param location  is the event location for this list segment
      * @param timeInMilliseconds is the date of event for this list segment
      * @param magnitude is the event magnitude for this list segment
+     * @param url is the url for event's corresponding USGS page
      */
-    public Earthquake(double magnitude, String location, Long timeInMilliseconds) {
+    public Earthquake(double magnitude, String location, Long timeInMilliseconds, String url) {
         mMagnitude = magnitude;
         mLocation = location;
         mTimeInMilliseconds = timeInMilliseconds;
+        mUrl = url;
     }
 
     /**
@@ -42,7 +46,9 @@ public class Earthquake {
     public Long getTimeInMilliseconds() {
         return mTimeInMilliseconds;
     }
-
-
+    /**
+     * get and return URL from Earthquake JSON Object
+     */
+    public String getUrl() { return mUrl;}
 
 }
