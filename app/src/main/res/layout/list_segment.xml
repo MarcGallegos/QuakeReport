@@ -51,7 +51,7 @@
         android:textColor="@color/textColorEarthquakeLocation"
         android:textSize="16sp"
         android:id="@+id/primary_location"
-        tools:text="Lanforddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"/>
+        tools:text="Lanford"/>
         </LinearLayout>
 
     <LinearLayout
