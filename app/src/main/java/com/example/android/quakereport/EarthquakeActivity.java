@@ -18,11 +18,18 @@ package com.example.android.quakereport;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -49,8 +56,7 @@ public class EarthquakeActivity extends AppCompatActivity
      * URL (variable) for earthquake data from USGS dataset
      */
     private static final String USGS_Request_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?" +
-                    "format=geojson&orderby=time&minmag=5&limit=10";
+            "https://earthquake.usgs.gov/fdsnws/event/1/query";
 
     /**
      * Constant value for earthquake loader ID. Can be any integer as is meant for >1 loader
@@ -77,7 +83,6 @@ public class EarthquakeActivity extends AppCompatActivity
 
         // Create a new {@link ArrayAdapter} that takes an empty list of earthquakes as input
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
-
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(mAdapter);
@@ -87,20 +92,16 @@ public class EarthquakeActivity extends AppCompatActivity
     earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
         //Find most currently selected earthquake
         Earthquake currentEarthquake = mAdapter.getItem(position);
-
         //Convert string URL into URI object (to pass to Intent constructor)
         Uri earthquakeUri = Uri.parse(currentEarthquake.getUrl());
-
         //Create new intent to view earthquake URI
         Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
-
         //Send Intent to launch new browser activity
         startActivity(websiteIntent);
         }
-        });
+    });
 
         //Prepare EarthquakeLoader. Either via reconnecting to an existing one or start a new one.
         getLoaderManager().initLoader(EARTHQUAKE_LOADER_ID, null, this);
@@ -108,11 +109,38 @@ public class EarthquakeActivity extends AppCompatActivity
     }
 
     @Override
+    //onCreateLoader instantiates and returns a new Loader for the given ID
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
-        Log.i(LOG_TAG, "TEST: Loader onCreate Called");
-        //Create a new Loader for the given URL
-        return new EarthquakeLoader(this, USGS_Request_URL);
+        Log.i(LOG_TAG, "TEST: Loader onCreateLoader Called");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //getString retrieves a String value from the preferences. The second parameter is the
+        // default value for this preference.
+        String minMagnitude = sharedPrefs.getString(
+                getString(R.string.settings_min_magnitude_key),
+                getString(R.string.settings_min_magnitude_default));
+
+        //take user's preference stored in orderBy variable to use as "orderby" parameter
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
+
+        //parse breaks apart the URI string that's passed into it's parameter
+        Uri baseUri = Uri.parse(USGS_Request_URL);
+
+        //buildUpon prepares the baseUri we just parsed so we can add query parameters to it.
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        //Append query parameter and its value. For example, the 'format=geojson'
+        uriBuilder.appendQueryParameter("format","geojson");
+        uriBuilder.appendQueryParameter("limit","10");
+        uriBuilder.appendQueryParameter("minmag","minMagnitude");
+        uriBuilder.appendQueryParameter("orderby",orderBy);
+
+        //Create a new Loader and return the completed Uri:
+        // "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=10&minmag=minMagnitude&orderby=time
+        return new EarthquakeLoader(this, uriBuilder.toString());
     }
 
     @Override
@@ -121,8 +149,18 @@ public class EarthquakeActivity extends AppCompatActivity
         //Hide loading indicator as data has been loaded
         View progressBar=findViewById(R.id.indeterminateBar);
         progressBar.setVisibility(View.GONE);
-        //Set (currently-blank) empty state text to display "No Earthquakes Found."
-        mEmptyStateTextView.setText(R.string.no_earthquakes);
+
+        //Check for internet connection
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo =cm.getActiveNetworkInfo();
+        if (networkInfo==null) {
+            //state there is no internet connection
+            mEmptyStateTextView.setText(R.string.no_internet_connection);
+        }else if (networkInfo!=null && networkInfo.isConnected()){
+            //There IS internet but list is still empty
+            mEmptyStateTextView.setText(R.string.no_earthquakes);
+        }
         //Clear adapter of previous earthquake data
         mAdapter.clear();
         //If a valid list of {@link Earthquake}s exists add them to the adapter's dataset.
@@ -142,5 +180,30 @@ public class EarthquakeActivity extends AppCompatActivity
         Log.i(LOG_TAG,"TEST: onLoaderReset Called");
     }
 
+    @Override
+    //This method initializes the contents of the Activity's options menu.
+    public boolean onCreateOptionsMenu(Menu menu){
+        //Inflate the Options menu specified in XML
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+    }
+    @Override
+    //Pass MenuItem that is selected
+    public boolean onOptionsItemSelected(MenuItem item){
+        //returns unique id for menu item defined by android:id in menu resource
+        // determine which item was selected and what action to take
+        int id=item.getItemId();
+        //menu has one item, @id/action-settings,
+        //match id against known menu items to perform appropriate action
+        if(id==R.id.action_settings){
+            //in this case, open SettingsActivity via an intent.
+            Intent settingsIntent=new Intent(this,SettingsActivity.class);
+            startActivity(settingsIntent);
+            //Return boolean "true"
+            return true;
+        }
+        //Return item selected
+        return super.onOptionsItemSelected(item);
+    }
 
 }
